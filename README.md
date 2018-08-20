@@ -5,11 +5,23 @@ The goal is to make a 2d drafting program. Stretch goal is to make it be able to
 Basic Functionality:
 - X draw line from point A to point B
 - X "snaps"
-- zoomable
+- X movable
+- X zoomable
 - "hotkey distances"
-- "hotkey directions"
+- X "hotkey directions"
 - selectable lines
 - selectable points
 - save files
 - read files
+
+Advanced
 - Annotate
+- Layers
+- Curves
+- Animations
+
+
+TODO
+- Make jquery local reference
+- make all references local
+- Clean up line vs element?

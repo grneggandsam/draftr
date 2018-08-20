@@ -5,30 +5,38 @@
 const model = require('./model');
 const utils = require('./utility');
 let ctx;
-let zoom=1;
-let pos={
+let sPos={
   x: 0,
   y: 0
 }
 
 function clearRender() {
-
+  let circle = '<circle id="snapCircle" cx="50" cy="50" r="10" stroke-width="0" fill="yellow" />';
+  ctx.innerHTML = circle;
 };
 
 function renderElems() {
   // loop through elements
   model.ELEM.forEach((elem) => {
-    console.log(elem);
+    addItem(elem);
   });
 };
 
 function addItem(item) {
-  let newEl = document.createElement(item.t);
+  // Adjust for pan/scale
+  let adjustedElem = Object.assign({}, item);
+  if(adjustedElem.t == 'line') {
+    adjustedElem.x1 = (adjustedElem.x1 - render.pos.x) * render.screenScale;
+    adjustedElem.y1 = (adjustedElem.y1 - render.pos.y) * render.screenScale;
+    adjustedElem.x2 = (adjustedElem.x2 - render.pos.x) * render.screenScale;
+    adjustedElem.y2 = (adjustedElem.y2 - render.pos.y) * render.screenScale;
+  }
+  let newEl = document.createElement(adjustedElem.t);
   var keys = Object.keys(item);
   for(var i=0;i<keys.length;i++){
     var key = keys[i];
     if(key != 't')
-      newEl.setAttribute(key, item[key]);
+      newEl.setAttribute(key, adjustedElem[key]);
   }
   ctx.appendChild(newEl);
   ctx.innerHTML += '';
@@ -60,35 +68,35 @@ function adjust(name, item) {
   var keys = Object.keys(item);
   for(var i=0;i<keys.length;i++){
     var key = keys[i];
-    if(key != 't')
+    if(key != 't' && key != null)
       elem.setAttribute(key, item[key]);
   }
 }
 
-function zoomIn(val) {
-
+function zoomIn(x, y, val) {
+  render.screenScale*=val;
+  render.pos.x+=(val*x-x)/render.screenScale;
+  render.pos.y+=(val*y-y)/render.screenScale;
 }
 
-function move(dX, dY) {
-  pos.x+=dX;
-  pos.y+=dY;
+function move(baseX, baseY) {
+  render.pos.x = baseX;
+  render.pos.y = baseY;
 }
 
 const render = {
   setCtx: (ctxp) => {
     ctx = ctxp;
   },
-  render: () => {
-    renderElems();
-    // outsideData = outsideDataP;
-    // renderActions();
-    // drawMap();
-  },
+  renderElems: renderElems,
+  clearRender: clearRender,
   addItem: addItem,
-  redraw: redraw,
   removeItem: removeItem,
   adjust: adjust,
-  pos: pos,
+  pos: sPos,
+  move: move,
+  zoomIn: zoomIn,
+  screenScale: 1,
 };
 
 module.exports = render;
