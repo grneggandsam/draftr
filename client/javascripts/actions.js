@@ -268,8 +268,15 @@ function endLine() {
   model.POINTS.push(pointA);
   model.POINTS.push(pointB);
   render.addItem(element);
-  actions.drawing = false;
+  clearTemp();
 };
+
+function clearTemp() {
+  actions.drawing = false;
+  hotkeyDist.writingVal = false;
+  hotkeyDist.distSet = false;
+  document.getElementById('curDist').innerHTML = "";
+}
 
 function zoom(x, y, val) {
   if(val > 0) {
@@ -319,6 +326,7 @@ function assignKeyDowns(event) {
   }
   if(keyName == "q" || keyName == 'Escape') {
     stick = 0;
+    hotkeyDist.writingVal = false;
     actions.drawingType = 0;
     let curLine = document.getElementById('currentLine');
     if(curLine)

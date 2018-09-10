@@ -7,6 +7,7 @@ Basic Functionality:
 - X "snaps"
 - X movable
 - X zoomable
+- Buttons
 - "hotkey distances"
 - X "hotkey directions"
 - selectable lines

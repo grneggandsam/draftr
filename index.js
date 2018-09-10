@@ -9,7 +9,7 @@ var server = app.listen(3000, function() {
 //Database Stuff
 var mongo = require('mongodb');
 var monk = require('monk');
-const db = monk('localhost:27017/codopolis');
+const db = monk('localhost:27017/drafter');
 db.on('error', function (err) { console.error(err); });
 db.on('open', function () { console.log('open'); });
 db.then(() => {
@@ -20,7 +20,6 @@ db.then(() => {
 var session = require('express-session');
 var cookieParser = require('cookie-parser');
 var RedisStore = require("connect-redis")(session);
-var map = require('./server/map.js');
 var users = require('./server/routes/users');
 
 
@@ -63,7 +62,6 @@ app.use(cookieParser());
 // set up static file serving from the public directory
 app.use('/static', express.static(__dirname + '/client'));
 
-map.readDBMap(db);
 
 // Setup Routing for main page
 app.get('/', function(req, res){
@@ -73,7 +71,6 @@ app.get('/', function(req, res){
   // }
   // else {
     res.cookie('userId', req.session.user);
-    res.cookie('MAP', map.map);
 
     res.sendFile(__dirname + '/client/index.html');
   // }
